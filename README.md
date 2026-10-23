@@ -2,6 +2,8 @@
 
 Aplikasi kasir (Point of Sale) sederhana dengan Python yang tersedia dalam **dua versi**: aplikasi web (Flask) dan aplikasi command line. Keduanya memakai logika bisnis yang sama di folder `kasir/`, sehingga tampilan dan logika terpisah dengan rapi. Proyek ini mensimulasikan alur kerja kasir di toko kelontong: mengelola produk, melayani transaksi, mencetak struk, dan membuat laporan penjualan harian.
 
+![Halaman kasir](screenshots/kasir.png)
+![Struk belanja](screenshots/struk.png)
 ## ✨ Fitur
 
 **Versi web** menampilkan katalog produk dalam bentuk kartu yang bisa diklik, dengan keranjang belanja bergaya struk thermal di sampingnya. Tersedia tombol uang pas dan nominal cepat, halaman struk yang bisa dicetak langsung dari browser, tabel kelola produk, riwayat transaksi, dan laporan harian dengan grafik produk terlaris. Tampilannya responsif untuk layar HP.
