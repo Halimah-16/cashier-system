@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Laporan{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>Laporan penjualan</h1>
+  <form method="get" class="inline">
+    <label for="tanggal" class="sr-only">Tanggal</label>
+    <input id="tanggal" type="date" name="tanggal" value="{{ laporan.tanggal }}">
+    <button class="btn">Tampilkan</button>
+  </form>
+</div>
+
+<div class="report">
+  <p class="report-big">{{ laporan.pendapatan|rupiah }}</p>
+  <p class="report-sub">pendapatan dari {{ laporan.jumlah_transaksi }} transaksi pada {{ laporan.tanggal }}</p>
+
+  {% if laporan.produk_terlaris %}
+  <h2>Produk terlaris</h2>
+  {% set maks = laporan.produk_terlaris[0][1] %}
+  <ol class="bars">
+    {% for nama, jumlah in laporan.produk_terlaris %}
+    <li>
+      <span class="bar-label">{{ nama }}</span>
+      <span class="bar" style="--w: {{ (jumlah / maks * 100)|round }}%"></span>
+      <span class="bar-val">{{ jumlah }} terjual</span>
+    </li>
+    {% endfor %}
+  </ol>
+  {% else %}
+    <p class="empty">Tidak ada penjualan pada tanggal ini. Pilih tanggal lain di atas.</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Riwayat transaksi{% endblock %}
+{% block content %}
+<div class="page-head"><h1>Riwayat transaksi</h1></div>
+{% if transaksi %}
+<div class="table-scroll">
+<table>
+  <thead><tr><th>No. transaksi</th><th>Waktu</th><th class="num">Jumlah barang</th><th class="num">Total</th><th><span class="sr-only">Aksi</span></th></tr></thead>
+  <tbody>
+  {% for t in transaksi %}
+    <tr>
+      <td class="code">{{ t.id }}</td>
+      <td>{{ t.waktu }}</td>
+      <td class="num">{{ t["items"]|sum(attribute='jumlah') }}</td>
+      <td class="num">{{ t.total_akhir|rupiah }}</td>
+      <td class="actions"><a href="{{ url_for('struk', id_transaksi=t.id) }}">Lihat struk</a></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+  <p class="empty">Belum ada transaksi. <a href="{{ url_for('index') }}">Buka kasir</a> untuk melayani pembeli pertama.</p>
+{% endif %}
+{% endblock %}

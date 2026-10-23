@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}Kasir{% endblock %}
+{% block content %}
+<div class="pos">
+  <section class="catalog" aria-label="Daftar produk">
+    <form class="search" method="get" action="{{ url_for('index') }}">
+      <input type="search" name="q" value="{{ q }}" placeholder="Cari produk, misalnya beras" aria-label="Cari produk">
+      <button type="submit" class="btn">Cari</button>
+      {% if q %}<a class="btn btn-quiet" href="{{ url_for('index') }}">Tampilkan semua</a>{% endif %}
+    </form>
+
+    {% if produk %}
+    <ul class="tiles">
+      {% for p in produk %}
+      <li>
+        <form method="post" action="{{ url_for('keranjang_tambah') }}" class="tile {% if p.stok == 0 %}is-empty{% endif %}">
+          <input type="hidden" name="kode" value="{{ p.kode }}">
+          <input type="hidden" name="q" value="{{ q }}">
+          <span class="tile-code">{{ p.kode }}</span>
+          <span class="tile-name">{{ p.nama }}</span>
+          <span class="tile-price">{{ p.harga|rupiah }}</span>
+          <span class="tile-stock {% if p.stok < 10 %}is-low{% endif %}">
+            {% if p.stok == 0 %}Stok habis{% else %}Sisa {{ p.stok }}{% endif %}
+          </span>
+          <button type="submit" class="tile-add" {% if p.stok == 0 %}disabled{% endif %}
+                  aria-label="Tambah {{ p.nama }} ke keranjang">+</button>
+        </form>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+      <p class="empty">Tidak ada produk yang cocok dengan “{{ q }}”. Coba kata lain atau
+        <a href="{{ url_for('produk_tambah') }}">tambahkan produk baru</a>.</p>
+    {% endif %}
+  </section>
+
+  <aside class="receipt-wrap" aria-label="Keranjang belanja">
+    <div class="receipt">
+      <p class="receipt-head">TOKO MAJU JAYA<br><small>Keranjang belanja</small></p>
+      <hr class="dash">
+
+      {% if keranjang.kosong %}
+        <p class="receipt-empty">Belum ada barang.<br>Klik + pada produk untuk menambahkan.</p>
+      {% else %}
+        <ul class="lines">
+          {% for kode, item in keranjang.items.items() %}
+          <li>
+            <span class="line-name">{{ item.produk.nama }}</span>
+            <span class="line-calc">
+              <span class="qty">
+                <form method="post" action="{{ url_for('keranjang_kurang', kode=kode) }}">
+                  <button aria-label="Kurangi {{ item.produk.nama }}">−</button>
+                </form>
+                {{ item.jumlah }}
+                <form method="post" action="{{ url_for('keranjang_tambah') }}">
+                  <input type="hidden" name="kode" value="{{ kode }}">
+                  <button aria-label="Tambah {{ item.produk.nama }}">+</button>
+                </form>
+              </span>
+              x {{ item.produk.harga|rupiah }}
+              <span class="line-sub">{{ item.subtotal|rupiah }}</span>
+            </span>
+            <form method="post" action="{{ url_for('keranjang_hapus', kode=kode) }}" class="line-remove">
+              <button aria-label="Hapus {{ item.produk.nama }}">hapus</button>
+            </form>
+          </li>
+          {% endfor %}
+        </ul>
+        <hr class="dash">
+        <p class="sum"><span>Subtotal</span><span>{{ keranjang.total|rupiah }}</span></p>
+        {% if diskon %}
+          <p class="sum"><span>Diskon {{ kasir.persen_diskon }}%</span><span>-{{ diskon|rupiah }}</span></p>
+        {% else %}
+          <p class="hint">Diskon {{ kasir.persen_diskon }}% untuk belanja mulai {{ kasir.diskon_minimal|rupiah }}</p>
+        {% endif %}
+        <p class="sum sum-total"><span>Total</span><span>{{ total_akhir|rupiah }}</span></p>
+
+        <form method="post" action="{{ url_for('bayar') }}" class="pay">
+          <label for="bayar">Uang tunai</label>
+          <input id="bayar" name="bayar" type="number" min="{{ total_akhir }}"
+                 inputmode="numeric" placeholder="{{ total_akhir }}" required>
+          <div class="quick">
+            {% set pecahan = [20000, 50000, 100000, 200000]|select('gt', total_akhir)|list %}
+            {% for nominal in [total_akhir] + pecahan %}
+              <button type="button" onclick="document.getElementById('bayar').value={{ nominal }}">
+                {% if loop.first %}Uang pas{% else %}{{ nominal|rupiah }}{% endif %}
+              </button>
+            {% endfor %}
+          </div>
+          <button type="submit" class="btn btn-pay">Bayar dan cetak struk</button>
+        </form>
+        <form method="post" action="{{ url_for('keranjang_kosongkan') }}">
+          <button class="link-clear">Kosongkan keranjang</button>
+        </form>
+      {% endif %}
+    </div>
+  </aside>
+</div>
+{% endblock %}

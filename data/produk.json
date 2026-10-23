@@ -1,0 +1,10 @@
+[
+  {"kode": "P001", "nama": "Beras 5kg", "harga": 68000, "stok": 20},
+  {"kode": "P002", "nama": "Minyak Goreng 1L", "harga": 17500, "stok": 35},
+  {"kode": "P003", "nama": "Gula Pasir 1kg", "harga": 16000, "stok": 40},
+  {"kode": "P004", "nama": "Telur Ayam 1kg", "harga": 28000, "stok": 25},
+  {"kode": "P005", "nama": "Mie Instan", "harga": 3500, "stok": 120},
+  {"kode": "P006", "nama": "Kopi Sachet", "harga": 1500, "stok": 200},
+  {"kode": "P007", "nama": "Susu UHT 250ml", "harga": 6000, "stok": 60},
+  {"kode": "P008", "nama": "Sabun Mandi", "harga": 4500, "stok": 50}
+]

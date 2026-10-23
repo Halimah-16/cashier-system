@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Ubah produk' if p else 'Tambah produk' }}{% endblock %}
+{% block content %}
+<div class="form-card">
+  <h1>{{ 'Ubah ' ~ p.nama if p else 'Tambah produk' }}</h1>
+  <form method="post" class="stack">
+    <label>Kode produk
+      <input name="kode" value="{{ p.kode if p else form.get('kode', '') }}" {% if p %}disabled{% else %}required{% endif %} maxlength="10">
+    </label>
+    <label>Nama produk
+      <input name="nama" value="{{ form.get('nama') or (p.nama if p else '') }}" required>
+    </label>
+    <div class="row">
+      <label>Harga (Rp)
+        <input name="harga" type="number" min="0" value="{{ form.get('harga') or (p.harga if p else '') }}" required>
+      </label>
+      <label>Stok
+        <input name="stok" type="number" min="0" value="{{ form.get('stok') or (p.stok if p else '') }}" required>
+      </label>
+    </div>
+    <div class="row-actions">
+      <button type="submit" class="btn btn-pay">{{ 'Simpan perubahan' if p else 'Tambah produk' }}</button>
+      <a class="btn btn-quiet" href="{{ url_for('produk_daftar') }}">Batal</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

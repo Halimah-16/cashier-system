@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Produk{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>Produk</h1>
+  <a class="btn btn-pay" href="{{ url_for('produk_tambah') }}">Tambah produk</a>
+</div>
+{% if produk %}
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Kode</th><th>Nama</th><th class="num">Harga</th><th class="num">Stok</th><th><span class="sr-only">Aksi</span></th></tr></thead>
+  <tbody>
+  {% for p in produk %}
+    <tr>
+      <td class="code">{{ p.kode }}</td>
+      <td>{{ p.nama }}</td>
+      <td class="num">{{ p.harga|rupiah }}</td>
+      <td class="num {% if p.stok < 10 %}is-low{% endif %}">{{ p.stok }}</td>
+      <td class="actions">
+        <a href="{{ url_for('produk_ubah', kode=p.kode) }}">Ubah</a>
+        <form method="post" action="{{ url_for('produk_hapus', kode=p.kode) }}"
+              onsubmit="return confirm('Hapus {{ p.nama }}?')">
+          <button class="danger">Hapus</button>
+        </form>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+  <p class="empty">Belum ada produk. <a href="{{ url_for('produk_tambah') }}">Tambahkan produk pertama</a> untuk mulai berjualan.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Struk {{ t.id }}{% endblock %}
+{% block content %}
+<div class="struk-page">
+  <div class="receipt receipt-print">
+    <p class="receipt-head">TOKO MAJU JAYA<br><small>Jl. Contoh No. 1, Jakarta</small></p>
+    <hr class="dash">
+    <p class="meta">No&nbsp;&nbsp;&nbsp;: {{ t.id }}<br>Waktu: {{ t.waktu }}</p>
+    <hr class="dash">
+    <ul class="lines">
+      {% for i in t["items"] %}
+      <li>
+        <span class="line-name">{{ i.nama }}</span>
+        <span class="line-calc">{{ i.jumlah }} x {{ i.harga|rupiah }}<span class="line-sub">{{ i.subtotal|rupiah }}</span></span>
+      </li>
+      {% endfor %}
+    </ul>
+    <hr class="dash">
+    <p class="sum"><span>Total</span><span>{{ t.total|rupiah }}</span></p>
+    {% if t.diskon %}
+      <p class="sum"><span>Diskon</span><span>-{{ t.diskon|rupiah }}</span></p>
+      <p class="sum sum-total"><span>Total bayar</span><span>{{ t.total_akhir|rupiah }}</span></p>
+    {% endif %}
+    <p class="sum"><span>Tunai</span><span>{{ t.bayar|rupiah }}</span></p>
+    <p class="sum sum-total"><span>Kembali</span><span>{{ t.kembalian|rupiah }}</span></p>
+    <hr class="dash">
+    <p class="receipt-head"><small>Terima kasih atas kunjungan Anda!</small></p>
+  </div>
+  <div class="struk-actions">
+    <button class="btn" onclick="window.print()">Cetak struk</button>
+    <a class="btn btn-pay" href="{{ url_for('index') }}">Transaksi baru</a>
+  </div>
+</div>
+{% endblock %}

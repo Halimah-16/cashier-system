@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Kasir{% endblock %} · Toko Maju Jaya</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="{{ url_for('index') }}">
+      <span class="brand-mark" aria-hidden="true">MJ</span>
+      Toko Maju Jaya
+    </a>
+    <nav>
+      {% set ep = request.endpoint or '' %}
+      <a href="{{ url_for('index') }}" {% if ep == 'index' %}aria-current="page"{% endif %}>Kasir</a>
+      <a href="{{ url_for('produk_daftar') }}" {% if ep.startswith('produk') %}aria-current="page"{% endif %}>Produk</a>
+      <a href="{{ url_for('riwayat') }}" {% if ep in ['riwayat', 'struk'] %}aria-current="page"{% endif %}>Riwayat</a>
+      <a href="{{ url_for('laporan') }}" {% if ep == 'laporan' %}aria-current="page"{% endif %}>Laporan</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    {% with pesan = get_flashed_messages(with_categories=true) %}
+      {% for kategori, isi in pesan %}
+        <p class="flash flash-{{ kategori }}" role="status">{{ isi }}</p>
+      {% endfor %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>
